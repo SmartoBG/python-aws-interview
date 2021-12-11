@@ -4,7 +4,7 @@ Description: SAM Template for SAM demo application
 
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 15
   Api:
     Cors:
       AllowMethods: "'GET,OPTIONS'"
@@ -14,7 +14,7 @@ Globals:
 Parameters:
   DDBTableName:
     Type: String
-    Description: The name of the DynamoDB tablename
+    Description: The name of the DynamoDB table
 
 Resources:
 ###################
@@ -43,7 +43,7 @@ Resources:
           - Effect: Allow
             Action:
             - dynamodb:BatchWriteItem
-            Resource: !GetAtt DocumentTable.Arn
+            Resource: !GetAtt CarTable.Arn
   
   # API stage
   MyApi:

@@ -20,11 +20,11 @@ def lambda_handler(event, context):
                         'Item': {
                             'make': {'S': 'Nissan'},
                             'model': {'S': 'Micra'},
-                            'year': {'N': 2004},
+                            'year': {'N': '2004'},
                             'chassis_no': {'S': '12345A'},
                             'id': {'N': '1'},
-                            'last_updated': {'S': ''},
-                            'price': {'N': 500.0}
+                            'last_updated': {'S': '2017-02-01 00:00:00'},
+                            'price': {'N': '500.0'}
                         }
                     }
                 }
