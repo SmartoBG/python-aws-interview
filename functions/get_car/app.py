@@ -23,7 +23,7 @@ def lambda_handler(event, context):
             ExpressionAttributeValues={
                 ":id": {'N': id}
             },
-            ProjectionExpression='#yr, price, model, mak, last_updated',
+            ProjectionExpression='#yr, price, model, make, last_updated',
             Limit=1,
             ScanIndexForward=False
         )
