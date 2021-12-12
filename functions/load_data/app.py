@@ -8,13 +8,14 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 ddbclient = boto3.client('dynamodb', endpoint_url='http://dynamodb:8000/')
+TABLENAME = os.environ['DDBTableName']
  
 
 def lambda_handler(event, context):
     try:
         response = ddbclient.batch_write_item(
         RequestItems={
-            os.environ['DDBTableName']: [
+            TABLENAME: [
                 {
                     'PutRequest': {
                         'Item': {
@@ -25,6 +26,15 @@ def lambda_handler(event, context):
                             'id': {'N': '1'},
                             'last_updated': {'S': '2017-02-01 00:00:00'},
                             'price': {'N': '500.0'}
+                        },
+                         'Item': {
+                            'make': {'S': 'Nissan'},
+                            'model': {'S': 'Micra'},
+                            'year': {'N': '2004'},
+                            'chassis_no': {'S': '12345A'},
+                            'id': {'N': '1'},
+                            'last_updated': {'S': '2017-03-01 00:00:00'},
+                            'price': {'N': '400.0'}
                         }
                     }
                 }

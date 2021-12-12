@@ -4,16 +4,16 @@
 [function_build_definitions.4182a199-0635-4dc1-baac-a66396b9e75c]
 codeuri = "C:\\STUDY\\AWS\\Interview\\python-aws-interview\\functions\\load_data"
 runtime = "python3.9"
-source_md5 = ""
 architecture = "x86_64"
+manifest_hash = ""
 packagetype = "Zip"
 functions = ["LoadDataFunction"]
 
 [function_build_definitions.0c847983-bf08-4f20-b2e9-46d9fb9216b9]
 codeuri = "C:\\STUDY\\AWS\\Interview\\python-aws-interview\\functions\\get_car"
 runtime = "python3.9"
-source_md5 = ""
 architecture = "x86_64"
+manifest_hash = ""
 packagetype = "Zip"
 functions = ["GetCarFunction"]
 

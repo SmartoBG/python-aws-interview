@@ -3,39 +3,43 @@ import json
 import boto3
 import logging
 from botocore.exceptions import ClientError
+from boto3.dynamodb.types import TypeDeserializer
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 ddbclient = boto3.client('dynamodb', endpoint_url='http://dynamodb:8000/')
+TABLENAME = os.environ['DDBTableName']
 
 def lambda_handler(event, context):
-    id = event['queryStringParameters']['id']
-    last_updated = event['queryStringParameters']['last_updated']
+    id = event['queryStringParameters'].get('id', "")
 
     try:
-        response = ddbclient.get_item(
-            TableName=os.environ['DDBTableName'],
-            Key={
-                'id':{'N': id},
-                'last_updated':{'S': last_updated}
+        response = ddbclient.query(
+            TableName=TABLENAME,
+            KeyConditionExpression='id = :id',
+            ExpressionAttributeNames = {
+                '#yr': 'year'
             },
-            AttributesToGet=[
-                'year', 'price', 'model', 'make'
-            ],
+            ExpressionAttributeValues={
+                ":id": {'N': id}
+            },
+            ProjectionExpression='#yr, price, model, make',
+            Limit=1,
+            ScanIndexForward=False
         )
         
-        logging.info(response)
+        #logging.info(response)
 
-        if response:
+        if len(response['Items']) > 0:
+            diction_items = {x: TypeDeserializer().deserialize(y) for x, y in response['Items'][0].items()}   # type: ignore
+            print(diction_items)
             return {
                 'statusCode': response['ResponseMetadata']['HTTPStatusCode'],
                 'headers': { 
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin':'*'
                 },
-                'body': json.dumps({
-                    'message': response,
-                }),
+                'body': diction_items
             }
         else:
             return {
