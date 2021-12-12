@@ -9,4 +9,12 @@ architecture = "x86_64"
 packagetype = "Zip"
 functions = ["LoadDataFunction"]
 
+[function_build_definitions.0c847983-bf08-4f20-b2e9-46d9fb9216b9]
+codeuri = "C:\\STUDY\\AWS\\Interview\\python-aws-interview\\functions\\get_car"
+runtime = "python3.9"
+source_md5 = ""
+architecture = "x86_64"
+packagetype = "Zip"
+functions = ["GetCarFunction"]
+
 [layer_build_definitions]

@@ -4,7 +4,7 @@ Description: SAM Template for SAM demo application
 
 Globals:
   Function:
-    Timeout: 15
+    Timeout: 10
   Api:
     Cors:
       AllowMethods: "'GET,OPTIONS'"
@@ -44,7 +44,40 @@ Resources:
             Action:
             - dynamodb:BatchWriteItem
             Resource: !GetAtt CarTable.Arn
-  
+# lambda function to get car data
+  GetCarFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/get_car/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      FunctionName: GetCarFunction
+      Events:
+        GetCar:
+          Type: Api
+          Properties:
+            Path: /car
+            Method: get
+            RequestParameters:
+              - method.request.querystring.id
+              - method.request.querystring.last_updated
+            RestApiId: !Ref MyApi
+      Environment:
+        Variables:
+          DDBTableName: !Ref DDBTableName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - dynamodb:getItem
+            Resource: !GetAtt DocumentTable.Arn
   # API stage
   MyApi:
     Type: AWS::Serverless::Api
