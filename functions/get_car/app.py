@@ -1,5 +1,5 @@
 import os
-import simplejson as json
+import simplejson as json # type: ignore
 import boto3
 import logging
 from botocore.exceptions import ClientError
@@ -23,7 +23,7 @@ def lambda_handler(event, context):
             ExpressionAttributeValues={
                 ":id": {'N': id}
             },
-            ProjectionExpression='#yr, price, model, make',
+            ProjectionExpression='#yr, price, model, mak, last_updated',
             Limit=1,
             ScanIndexForward=False
         )
