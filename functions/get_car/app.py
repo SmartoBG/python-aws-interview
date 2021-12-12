@@ -1,5 +1,5 @@
 import os
-import json
+import simplejson as json
 import boto3
 import logging
 from botocore.exceptions import ClientError
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin':'*'
                 },
-                'body': diction_items
+                'body': json.dumps(diction_items)
             }
         else:
             return {
