@@ -3,7 +3,7 @@ import simplejson as json # type: ignore
 import boto3
 import logging
 from botocore.exceptions import ClientError
-from boto3.dynamodb.types import TypeDeserializer
+from boto3.dynamodb.types import NULL, TypeDeserializer
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -11,46 +11,26 @@ ddbclient = boto3.client('dynamodb', endpoint_url='http://dynamodb:8000/')
 TABLENAME = os.environ['DDBTableName']
 
 def lambda_handler(event, context):
+    
     try:
-        id = event['queryStringParameters']['id']
-    except:
-        return {
-            'statusCode': '400',
-            'headers': { 
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin':'*'
-            },
-            'body': json.dumps({
-                'message': 'Please provide query string paramter for car id.',
-            }),
-        }
-    try:
-        response = ddbclient.query(
+        response = ddbclient.scan(
             TableName=TABLENAME,
-            KeyConditionExpression='id = :id',
-            ExpressionAttributeNames = {
-                '#yr': 'year'
-            },
-            ExpressionAttributeValues={
-                ":id": {'N': id}
-            },
-            ProjectionExpression='#yr, price, model, make, last_updated',
-            Limit=1,
-            ScanIndexForward=False
+            Select='SPECIFIC_ATTRIBUTES',
+            ProjectionExpression='price',
         )
         
-        logging.info(response)
-
-        if len(response['Items']) > 0:
-            diction_items = {x: TypeDeserializer().deserialize(y) for x, y in response['Items'][0].items()}   # type: ignore
-            print(diction_items)
+        #logging.info(response)
+        items = response['Items']
+        if len(items) > 0:
+            lst = [TypeDeserializer().deserialize(x['price']) for x in items if x]  # type: ignore 
+            avg = sum(lst)/len(lst)
             return {
                 'statusCode': response['ResponseMetadata']['HTTPStatusCode'],
                 'headers': { 
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin':'*'
                 },
-                'body': json.dumps(diction_items)
+                'body': json.dumps(avg)
             }
         else:
             return {

@@ -17,4 +17,12 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["GetCarFunction"]
 
+[function_build_definitions.2762c3ce-23c7-4767-b096-a50357001803]
+codeuri = "C:\\STUDY\\AWS\\Interview\\python-aws-interview\\functions\\get_avg"
+runtime = "python3.9"
+architecture = "x86_64"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GetAvgFunction"]
+
 [layer_build_definitions]

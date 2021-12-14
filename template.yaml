@@ -17,9 +17,9 @@ Parameters:
     Description: The name of the DynamoDB table
 
 Resources:
-###################
-##    Lambdas    ##
-###################
+  ###################
+  ##    Lambdas    ##
+  ###################
   # lambda function to load initial data
   LoadDataFunction:
     Type: AWS::Serverless::Function 
@@ -34,17 +34,17 @@ Resources:
       Policies:
         - Version: '2012-10-17'
           Statement:
-          - Effect: Allow
-            Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            Resource: arn:aws:logs:*:*:*
-          - Effect: Allow
-            Action:
-            - dynamodb:BatchWriteItem
-            Resource: !GetAtt CarTable.Arn
-# lambda function to get car data
+            - Effect: Allow
+              Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+            - Effect: Allow
+              Action:
+              - dynamodb:BatchWriteItem
+              Resource: !GetAtt CarTable.Arn
+  # lambda function to get car data
   GetCarFunction:
     Type: AWS::Serverless::Function 
     Properties:
@@ -78,7 +78,40 @@ Resources:
             Action:
             - dynamodb:getItem
             Resource: !GetAtt DocumentTable.Arn
-  # API stage
+
+# lambda function to get average data
+  GetAvgFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/get_avg/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      FunctionName: GetAvgFunction
+      Events:
+        GetAvg:
+          Type: Api
+          Properties:
+            Path: /avg
+            Method: post
+            RestApiId: !Ref MyApi
+      Environment:
+        Variables:
+          DDBTableName: !Ref DDBTableName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - dynamodb:getItem
+            Resource: !GetAtt DocumentTable.Arn
+
+# API stage
   MyApi:
     Type: AWS::Serverless::Api
     Properties:
