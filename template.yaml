@@ -92,7 +92,7 @@ Resources:
           Type: Api
           Properties:
             Path: /avg
-            Method: post
+            Method: get
             RestApiId: !Ref MyApi
       Environment:
         Variables:
